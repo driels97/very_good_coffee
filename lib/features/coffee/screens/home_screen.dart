@@ -16,21 +16,77 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(l10n.appBarTitle),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {},
-                child: Text(l10n.newCoffeeButton),
-              ),
-              const SizedBox(height: 16),
-              TextButton(
-                onPressed: () {},
-                child: Text(l10n.favoriteCoffeesButton),
-              ),
-            ],
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: BlocBuilder<CoffeeCubit, CoffeeState>(
+              builder: (context, state) {
+                if (state is CoffeeLoading) {
+                  return const CircularProgressIndicator();
+                } else if (state is CoffeeLoaded) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Image(image: state.coffeeImage),
+                            const Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Icon(
+                                Icons.favorite_border,
+                                color: Colors.white,
+                                size: 32,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () async {
+                                await context
+                                    .read<CoffeeCubit>()
+                                    .getNewCoffeeImage();
+                              },
+                              child: Text(l10n.newCoffeeButton),
+                            ),
+                            const SizedBox(height: 16),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text(l10n.favoriteCoffeesButton),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return InkWell(
+                    onTap: () async {
+                      await context.read<CoffeeCubit>().getNewCoffeeImage();
+                    },
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.refresh,
+                          size: 48,
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Try again',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),
