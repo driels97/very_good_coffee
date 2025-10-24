@@ -23,10 +23,10 @@ class CoffeeLoaded extends CoffeeState {
 }
 
 class CoffeeError extends CoffeeState {
-  CoffeeError({required this.description});
+  CoffeeError({required this.errorDescription});
 
-  final String description;
+  final String errorDescription;
 
   @override
-  List<Object?> get props => [description];
+  List<Object?> get props => [errorDescription];
 }

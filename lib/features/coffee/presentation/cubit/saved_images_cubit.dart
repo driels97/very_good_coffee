@@ -23,7 +23,7 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
 
     await result.fold(
       (exception) {
-        emit(SavedImagesError(description: exception.toString()));
+        emit(SavedImagesError(errorDescription: exception.toString()));
       },
       (savedImages) {
         emit(SavedImagesLoaded(savedImages: savedImages));
@@ -35,12 +35,25 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
     final currentState = state;
 
     if (currentState is SavedImagesLoaded) {
+      emit(
+        SavedImagesLoadedSavingOrDeleting(
+          savedImages: currentState.savedImages,
+        ),
+      );
+
       final result = await _coffeeRepository.saveCoffeeImage(
         fileName: coffeeImage.fileName,
         imageBytes: coffeeImage.bytes,
       );
       await result.fold(
-        (_) {},
+        (error) {
+          emit(
+            SavedImagesLoadedSaveError(
+              savedImages: currentState.savedImages,
+              errorDescription: error.toString(),
+            ),
+          );
+        },
         (savedImages) {
           emit(
             SavedImagesLoaded(
@@ -50,20 +63,31 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
         },
       );
     }
-
-    unawaited(getSavedCoffeeImages());
   }
 
   Future<void> deleteCoffeeImage(CoffeeImageEntity coffeeImage) async {
     final currentState = state;
 
     if (currentState is SavedImagesLoaded) {
+      emit(
+        SavedImagesLoadedSavingOrDeleting(
+          savedImages: currentState.savedImages,
+        ),
+      );
+
       final result = await _coffeeRepository.deleteCoffeeImage(
         fileName: coffeeImage.fileName,
       );
 
       await result.fold(
-        (_) {},
+        (error) {
+          emit(
+            SavedImagesLoadedDeleteError(
+              savedImages: currentState.savedImages,
+              errorDescription: error.toString(),
+            ),
+          );
+        },
         (savedImages) {
           emit(
             SavedImagesLoaded(
@@ -73,7 +97,5 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
         },
       );
     }
-
-    unawaited(getSavedCoffeeImages());
   }
 }
