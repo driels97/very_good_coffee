@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:very_good_coffee/app/injection_container.dart' as injection;
 import 'package:very_good_coffee/features/coffee/coffee.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
 
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
     final l10n = context.l10n;
 
     return BlocProvider(
-      create: (_) => CoffeeCubit(),
+      create: (_) => injection.dependency<CoffeeCubit>(),
       child: Scaffold(
         appBar: AppBar(
           title: Text(l10n.appBarTitle),
