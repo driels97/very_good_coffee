@@ -11,15 +11,22 @@ class CoffeeLoading extends CoffeeState {}
 
 class CoffeeLoaded extends CoffeeState {
   CoffeeLoaded({
-    required this.coffeeImage,
+    required this.fetchedCoffeeImage,
   });
 
-  final ImageProvider<Object> coffeeImage;
+  final CoffeeImageEntity fetchedCoffeeImage;
 
   @override
-  List<Object> get props => [
-    coffeeImage,
+  List<Object?> get props => [
+    fetchedCoffeeImage,
   ];
 }
 
-class CoffeeError extends CoffeeState {}
+class CoffeeError extends CoffeeState {
+  CoffeeError({required this.description});
+
+  final String description;
+
+  @override
+  List<Object?> get props => [description];
+}

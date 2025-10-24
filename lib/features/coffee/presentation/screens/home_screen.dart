@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:very_good_coffee/app/injection_container.dart' as injection;
 import 'package:very_good_coffee/features/coffee/coffee.dart';
+import 'package:very_good_coffee/features/coffee/domain/entities/coffee_image_entity.dart';
+import 'package:very_good_coffee/features/coffee/presentation/cubit/saved_images_cubit.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,8 +13,15 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    return BlocProvider(
-      create: (_) => injection.dependency<CoffeeCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => injection.dependency<CoffeeCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => injection.dependency<SavedImagesCubit>(),
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           title: Text(l10n.appBarTitle),
@@ -31,13 +40,16 @@ class HomeScreen extends StatelessWidget {
                         Stack(
                           alignment: Alignment.topRight,
                           children: [
-                            Image(image: state.coffeeImage),
-                            const Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Icon(
-                                Icons.favorite_border,
-                                color: Colors.white,
-                                size: 32,
+                            Image(
+                              image: Image.memory(
+                                state.fetchedCoffeeImage.bytes,
+                              ).image,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: saveImageWidget(
+                                context,
+                                coffeeImage: state.fetchedCoffeeImage,
                               ),
                             ),
                           ],
@@ -91,6 +103,51 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget saveImageWidget(
+    BuildContext context, {
+    required CoffeeImageEntity coffeeImage,
+  }) {
+    return BlocBuilder<SavedImagesCubit, SavedImagesState>(
+      buildWhen: (previous, current) {
+        if (previous is SavedImagesLoaded && current is SavedImagesLoaded) {
+          final wasSaved = previous.savedImages.contains(coffeeImage);
+          final isSaved = current.savedImages.contains(coffeeImage);
+          return !(wasSaved == isSaved);
+        }
+
+        return true;
+      },
+      builder: (context, state) {
+        return GestureDetector(
+          onTap: () async {
+            final saveImagesCubit = context.read<SavedImagesCubit>();
+
+            if (state is SavedImagesLoaded) {
+              if (state.savedImages.contains(coffeeImage)) {
+                await saveImagesCubit.deleteCoffeeImage(coffeeImage);
+              } else {
+                await saveImagesCubit.saveCoffeeImage(coffeeImage);
+              }
+            }
+          },
+          child:
+              state is SavedImagesLoaded &&
+                  state.savedImages.contains(coffeeImage)
+              ? const Icon(
+                  Icons.favorite,
+                  color: Colors.red,
+                  size: 32,
+                )
+              : const Icon(
+                  Icons.favorite_border,
+                  color: Colors.white,
+                  size: 32,
+                ),
+        );
+      },
     );
   }
 }

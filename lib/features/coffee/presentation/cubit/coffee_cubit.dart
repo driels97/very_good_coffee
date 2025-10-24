@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:very_good_coffee/features/coffee/domain/entities/coffee_image_entity.dart';
 import 'package:very_good_coffee/features/coffee/domain/repositories/icoffee_repository.dart';
 
 part 'coffee_state.dart';
@@ -21,13 +21,12 @@ class CoffeeCubit extends Cubit<CoffeeState> {
 
     final result = await _coffeeRepository.getNewCoffeeImage();
 
-    result.fold(
+    await result.fold(
       (exception) {
-        emit(CoffeeError());
+        emit(CoffeeError(description: exception.toString()));
       },
-      (imageBytes) {
-        final image = Image.memory(imageBytes).image;
-        emit(CoffeeLoaded(coffeeImage: image));
+      (coffeeImage) async {
+        emit(CoffeeLoaded(fetchedCoffeeImage: coffeeImage));
       },
     );
   }

@@ -2,18 +2,24 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
+import 'package:very_good_coffee/features/coffee/data/datasources/coffee_local_datasource.dart';
 import 'package:very_good_coffee/features/coffee/data/datasources/coffee_remote_datasource.dart';
+import 'package:very_good_coffee/features/coffee/data/models/coffee_image_model.dart';
+import 'package:very_good_coffee/features/coffee/domain/entities/coffee_image_entity.dart';
 import 'package:very_good_coffee/features/coffee/domain/repositories/icoffee_repository.dart';
 
 class CoffeeRepository implements ICoffeeRepository {
   CoffeeRepository({
     required CoffeeRemoteDatasource coffeeRemoteDatasource,
-  }) : _coffeeRemoteDatasource = coffeeRemoteDatasource;
+    required CoffeeLocalDatasource coffeeLocalDatasource,
+  }) : _coffeeRemoteDatasource = coffeeRemoteDatasource,
+       _coffeeLocalDatasource = coffeeLocalDatasource;
 
   final CoffeeRemoteDatasource _coffeeRemoteDatasource;
+  final CoffeeLocalDatasource _coffeeLocalDatasource;
 
   @override
-  Future<Either<Exception, Uint8List>> getNewCoffeeImage() async {
+  Future<Either<Exception, CoffeeImageEntity>> getNewCoffeeImage() async {
     final String fileUrl;
 
     try {
@@ -31,13 +37,72 @@ class CoffeeRepository implements ICoffeeRepository {
       );
 
       if (response.statusCode == 200) {
-        return Right(response.bodyBytes);
+        return Right(
+          CoffeeImageModel(
+            fileName: fileUrl.split('/').last,
+            bytes: response.bodyBytes,
+          ),
+        );
       } else {
         return Left(Exception('Failed to request coffee image'));
       }
     } on Exception catch (_) {
       return Left(
         Exception('Unknown error occurred while requesting new coffee image'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Exception, List<CoffeeImageEntity>>>
+  getSavedCoffeeImages() async {
+    try {
+      final savedImages = await _coffeeLocalDatasource.getSavedCoffeeImages();
+      final imagesList = savedImages
+          .map(
+            (image) => CoffeeImageModel(
+              fileName: image.$1,
+              bytes: image.$2,
+            ),
+          )
+          .toList();
+
+      return Right(imagesList);
+    } on Exception catch (_) {
+      return Left(
+        Exception('Unknown error occurred while getting saved coffee images'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Exception, Unit>> saveCoffeeImage({
+    required String fileName,
+    required Uint8List imageBytes,
+  }) async {
+    try {
+      await _coffeeLocalDatasource.saveCoffeeImage(
+        fileName: fileName,
+        imageBytes: imageBytes,
+      );
+      return const Right(unit);
+    } on Exception catch (_) {
+      return Left(
+        Exception('Unknown error occurred while saving the coffee image'),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Exception, Unit>> deleteCoffeeImage({
+    required String fileName,
+  }) async {
+    try {
+      await _coffeeLocalDatasource.deleteCoffeeImage(fileName: fileName);
+      return const Right(unit);
+    } on Exception catch (_) {
+      return Left(
+        Exception('Unknown error occurred while deleting the coffee image'),
       );
     }
   }
