@@ -17,6 +17,7 @@ class SavedImagesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.savedImagesAppBarTitle),
+        centerTitle: true,
       ),
       body: CustomScrollView(
         slivers: [

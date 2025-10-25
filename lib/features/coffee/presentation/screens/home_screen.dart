@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.homeAppBarTitle),
+        centerTitle: true,
       ),
       body: Center(
         child: Padding(
