@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:very_good_coffee/app/injection_container.dart' as injection;
 import 'package:very_good_coffee/features/coffee/coffee.dart';
 import 'package:very_good_coffee/features/coffee/presentation/cubit/saved_images_cubit.dart';
+import 'package:very_good_coffee/features/coffee/presentation/screens/saved_images_screen.dart';
 import 'package:very_good_coffee/features/coffee/presentation/widgets/save_image_widget.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
 
@@ -24,7 +27,7 @@ class HomeScreen extends StatelessWidget {
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: Text(l10n.appBarTitle),
+          title: Text(l10n.homeAppBarTitle),
         ),
         body: Center(
           child: Padding(
@@ -58,16 +61,20 @@ class HomeScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextButton(
-                              onPressed: () async {
-                                await context
-                                    .read<CoffeeCubit>()
-                                    .getNewCoffeeImage();
+                              onPressed: () {
+                                unawaited(
+                                  context
+                                      .read<CoffeeCubit>()
+                                      .getNewCoffeeImage(),
+                                );
                               },
                               child: Text(l10n.newCoffeeButton),
                             ),
                             const SizedBox(height: 16),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _goSavedImagesScreen(context);
+                              },
                               child: Text(l10n.favoriteCoffeesButton),
                             ),
                           ],
@@ -99,6 +106,22 @@ class HomeScreen extends StatelessWidget {
                 }
               },
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _goSavedImagesScreen(
+    BuildContext context,
+  ) {
+    unawaited(
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: context.read<SavedImagesCubit>(),
+            child: const SavedImagesScreen(),
           ),
         ),
       ),
