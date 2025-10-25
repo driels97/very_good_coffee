@@ -22,12 +22,12 @@ class HomeScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                BlocBuilder<CoffeeCubit, CoffeeState>(
-                  builder: (context, coffeeState) {
-                    if (coffeeState is CoffeeLoaded) {
-                      return BlocBuilder<SavedImagesCubit, SavedImagesState>(
+            child: BlocBuilder<CoffeeCubit, CoffeeState>(
+              builder: (context, coffeeState) {
+                if (coffeeState is CoffeeLoaded) {
+                  return Column(
+                    children: [
+                      BlocBuilder<SavedImagesCubit, SavedImagesState>(
                         builder: (context, savedImagesState) {
                           final isMarkedAsSaved =
                               savedImagesState is SavedImagesLoaded &&
@@ -44,45 +44,31 @@ class HomeScreen extends StatelessWidget {
                             isWidgetDisabled: isWidgetDisabled,
                           );
                         },
-                      );
-                    } else if (coffeeState is CoffeeError) {
-                      return ErrorRefreshWidget(
-                        onRefresh: context
+                      ),
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: context
                             .read<CoffeeCubit>()
                             .getNewCoffeeImage,
-                      );
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                Builder(
-                  builder: (context) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: context
-                              .read<CoffeeCubit>()
-                              .getNewCoffeeImage,
-                          child: Text(l10n.newCoffeeButton),
-                        ),
-                        const SizedBox(height: 16),
-                        TextButton(
-                          onPressed: () {
-                            unawaited(_goToSavedImagesScreen(context));
-                          },
-                          child: Text(l10n.favoriteCoffeesButton),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
+                        child: Text(l10n.newCoffeeButton),
+                      ),
+                    ],
+                  );
+                } else if (coffeeState is CoffeeError) {
+                  return ErrorRefreshWidget(
+                    onRefresh: context.read<CoffeeCubit>().getNewCoffeeImage,
+                  );
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async => _goToSavedImagesScreen(context),
+        child: const Icon(Icons.image_rounded),
       ),
     );
   }

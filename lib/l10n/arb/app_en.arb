@@ -8,10 +8,6 @@
     "@newCoffeeButton": {
         "description": "Text shown on a button in the home screen that makes a new coffee image be displayed"
     },
-    "favoriteCoffeesButton": "See Favorite Coffee Images",
-    "@favoriteCoffeesButton": {
-        "description": "Text shown on a button in the home screen that makes the favorite coffees screen be displayed"
-    },
     "savedImagesAppBarTitle": "Saved Coffee Images",
     "@savedImagesBarTitle": {
         "description": "Text shown in the AppBar of the app when the saved images screen is displayed"
