@@ -35,12 +35,6 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
     final currentState = state;
 
     if (currentState is SavedImagesLoaded) {
-      emit(
-        SavedImagesLoadedSavingOrDeleting(
-          savedImages: currentState.savedImages,
-        ),
-      );
-
       final result = await _coffeeRepository.saveCoffeeImage(
         fileName: coffeeImage.fileName,
         imageBytes: coffeeImage.bytes,
@@ -54,10 +48,10 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
             ),
           );
         },
-        (savedImages) {
+        (_) {
           emit(
             SavedImagesLoaded(
-              savedImages: currentState.savedImages..add(coffeeImage),
+              savedImages: [...currentState.savedImages, coffeeImage],
             ),
           );
         },
@@ -69,12 +63,6 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
     final currentState = state;
 
     if (currentState is SavedImagesLoaded) {
-      emit(
-        SavedImagesLoadedSavingOrDeleting(
-          savedImages: currentState.savedImages,
-        ),
-      );
-
       final result = await _coffeeRepository.deleteCoffeeImage(
         fileName: coffeeImage.fileName,
       );
@@ -88,10 +76,13 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
             ),
           );
         },
-        (savedImages) {
+        (_) {
+          final newList = List<CoffeeImageEntity>.from(currentState.savedImages)
+            ..remove(coffeeImage);
+
           emit(
             SavedImagesLoaded(
-              savedImages: currentState.savedImages..remove(coffeeImage),
+              savedImages: newList,
             ),
           );
         },

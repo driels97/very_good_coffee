@@ -4,47 +4,58 @@ import 'package:very_good_coffee/features/coffee/domain/entities/coffee_image_en
 import 'package:very_good_coffee/features/coffee/presentation/cubit/saved_images_cubit.dart';
 
 class SaveImageWidget extends StatelessWidget {
-  const SaveImageWidget({required this.coffeeImage, super.key});
+  const SaveImageWidget({
+    required this.coffeeImage,
+    required this.isMarkedAsSaved,
+    this.isWidgetDisabled = false,
+    super.key,
+  });
 
   final CoffeeImageEntity coffeeImage;
+  final bool isMarkedAsSaved;
+  final bool isWidgetDisabled;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SavedImagesCubit, SavedImagesState>(
-      builder: (context, state) {
-        final isWidgetDisabled = state is SavedImagesLoadedSavingOrDeleting;
+    return GestureDetector(
+      onTap: () async {
+        final saveImagesCubit = context.read<SavedImagesCubit>();
 
-        return GestureDetector(
-          onTap: () async {
-            final saveImagesCubit = context.read<SavedImagesCubit>();
-
-            if (!isWidgetDisabled && state is SavedImagesLoaded) {
-              if (state.savedImages.contains(coffeeImage)) {
-                await saveImagesCubit.deleteCoffeeImage(coffeeImage);
-              } else {
-                await saveImagesCubit.saveCoffeeImage(coffeeImage);
-              }
-            }
-          },
-          child: AnimatedOpacity(
-            opacity: isWidgetDisabled ? 0.5 : 1.0,
-            duration: Durations.medium1,
-            child:
-                state is SavedImagesLoaded &&
-                    state.savedImages.contains(coffeeImage)
-                ? const Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                    size: 32,
-                  )
-                : const Icon(
-                    Icons.favorite_border,
-                    color: Colors.white,
-                    size: 32,
-                  ),
-          ),
-        );
+        if (!isWidgetDisabled) {
+          if (isMarkedAsSaved) {
+            await saveImagesCubit.deleteCoffeeImage(coffeeImage);
+          } else {
+            await saveImagesCubit.saveCoffeeImage(coffeeImage);
+          }
+        }
       },
+      child: AnimatedOpacity(
+        opacity: isWidgetDisabled ? 0.5 : 1.0,
+        duration: Durations.medium1,
+        child: isMarkedAsSaved
+            ? Icon(
+                Icons.favorite,
+                color: Colors.red,
+                size: 32,
+                shadows: List.generate(
+                  50,
+                  (index) => const Shadow(
+                    blurRadius: 2,
+                  ),
+                ),
+              )
+            : Icon(
+                Icons.favorite_border,
+                color: Colors.white,
+                size: 32,
+                shadows: List.generate(
+                  50,
+                  (index) => const Shadow(
+                    blurRadius: 2,
+                  ),
+                ),
+              ),
+      ),
     );
   }
 }

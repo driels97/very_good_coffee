@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:very_good_coffee/app/injection_container.dart' as injection;
-import 'package:very_good_coffee/features/coffee/coffee.dart';
 import 'package:very_good_coffee/features/coffee/presentation/cubit/saved_images_cubit.dart';
 import 'package:very_good_coffee/features/coffee/presentation/widgets/save_image_widget.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
@@ -23,14 +22,7 @@ class SavedImagesScreen extends StatelessWidget {
             create: (_) => injection.dependency<SavedImagesCubit>(),
             child: BlocBuilder<SavedImagesCubit, SavedImagesState>(
               builder: (context, state) {
-                if (state is SavedImagesLoading) {
-                  return const SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                } else if (state is SavedImagesLoaded) {
+                if (state is SavedImagesLoaded) {
                   if (state.savedImages.isEmpty) {
                     return const SliverFillRemaining(
                       hasScrollBody: false,
@@ -44,6 +36,9 @@ class SavedImagesScreen extends StatelessWidget {
                     itemCount: state.savedImages.length,
                     itemBuilder: (context, index) {
                       final coffeeImage = state.savedImages[index];
+                      final isMarkedAsSaved = state.savedImages.contains(
+                        coffeeImage,
+                      );
 
                       return Padding(
                         padding: const EdgeInsets.all(8),
@@ -62,6 +57,7 @@ class SavedImagesScreen extends StatelessWidget {
                                 padding: const EdgeInsets.all(8),
                                 child: SaveImageWidget(
                                   coffeeImage: coffeeImage,
+                                  isMarkedAsSaved: isMarkedAsSaved,
                                 ),
                               ),
                             ),
@@ -82,7 +78,7 @@ class SavedImagesScreen extends StatelessWidget {
                 return const SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(
-                    child: Text('Unknown state'),
+                    child: CircularProgressIndicator(),
                   ),
                 );
               },

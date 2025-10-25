@@ -33,10 +33,10 @@ class HomeScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: BlocBuilder<CoffeeCubit, CoffeeState>(
-              builder: (context, state) {
-                if (state is CoffeeLoading) {
+              builder: (context, coffeeState) {
+                if (coffeeState is CoffeeLoading) {
                   return const CircularProgressIndicator();
-                } else if (state is CoffeeLoaded) {
+                } else if (coffeeState is CoffeeLoaded) {
                   return SingleChildScrollView(
                     child: Column(
                       children: [
@@ -45,14 +45,35 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             Image(
                               image: Image.memory(
-                                state.fetchedCoffeeImage.bytes,
+                                coffeeState.fetchedCoffeeImage.bytes,
                               ).image,
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8),
-                              child: SaveImageWidget(
-                                coffeeImage: state.fetchedCoffeeImage,
-                              ),
+                              child:
+                                  BlocBuilder<
+                                    SavedImagesCubit,
+                                    SavedImagesState
+                                  >(
+                                    builder: (context, savedImagesState) {
+                                      final isMarkedAsSaved =
+                                          savedImagesState
+                                              is SavedImagesLoaded &&
+                                          savedImagesState.savedImages.contains(
+                                            coffeeState.fetchedCoffeeImage,
+                                          );
+
+                                      final isWidgetDisabled =
+                                          savedImagesState is SavedImagesError;
+
+                                      return SaveImageWidget(
+                                        coffeeImage:
+                                            coffeeState.fetchedCoffeeImage,
+                                        isMarkedAsSaved: isMarkedAsSaved,
+                                        isWidgetDisabled: isWidgetDisabled,
+                                      );
+                                    },
+                                  ),
                             ),
                           ],
                         ),
@@ -73,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                             const SizedBox(height: 16),
                             TextButton(
                               onPressed: () {
-                                _goSavedImagesScreen(context);
+                                unawaited(_goToSavedImagesScreen(context));
                               },
                               child: Text(l10n.favoriteCoffeesButton),
                             ),
@@ -112,19 +133,21 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  void _goSavedImagesScreen(
+  Future<void> _goToSavedImagesScreen(
     BuildContext context,
-  ) {
-    unawaited(
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => BlocProvider.value(
-            value: context.read<SavedImagesCubit>(),
-            child: const SavedImagesScreen(),
-          ),
+  ) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => BlocProvider.value(
+          value: context.read<SavedImagesCubit>(),
+          child: const SavedImagesScreen(),
         ),
       ),
     );
+
+    if (context.mounted) {
+      await context.read<SavedImagesCubit>().getSavedCoffeeImages();
+    }
   }
 }
