@@ -2,11 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
-import 'package:very_good_coffee/features/coffee/data/datasources/coffee_local_datasource.dart';
-import 'package:very_good_coffee/features/coffee/data/datasources/coffee_remote_datasource.dart';
-import 'package:very_good_coffee/features/coffee/data/models/coffee_image_model.dart';
-import 'package:very_good_coffee/features/coffee/domain/entities/coffee_image_entity.dart';
-import 'package:very_good_coffee/features/coffee/domain/repositories/icoffee_repository.dart';
+import 'package:very_good_coffee/features/coffee/data/coffee_data.dart';
+import 'package:very_good_coffee/features/coffee/domain/coffee_domain.dart';
 
 class CoffeeRepository implements ICoffeeRepository {
   CoffeeRepository({

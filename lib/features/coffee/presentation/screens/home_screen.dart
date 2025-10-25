@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:very_good_coffee/features/coffee/coffee.dart';
-import 'package:very_good_coffee/features/coffee/presentation/cubit/saved_images_cubit.dart';
-import 'package:very_good_coffee/features/coffee/presentation/screens/saved_images_screen.dart';
+import 'package:very_good_coffee/features/coffee/presentation/coffee_presentation.dart';
 import 'package:very_good_coffee/features/coffee/presentation/widgets/coffee_image_icon_widget.dart';
 import 'package:very_good_coffee/features/coffee/presentation/widgets/error_refresh_widget.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';

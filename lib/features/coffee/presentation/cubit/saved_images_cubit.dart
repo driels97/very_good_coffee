@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:very_good_coffee/features/coffee/domain/entities/coffee_image_entity.dart';
-import 'package:very_good_coffee/features/coffee/domain/repositories/icoffee_repository.dart';
+import 'package:very_good_coffee/features/coffee/domain/coffee_domain.dart';
 
 part 'saved_images_state.dart';
 

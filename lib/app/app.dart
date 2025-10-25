@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:very_good_coffee/app/injection_container.dart' as injection;
 import 'package:very_good_coffee/app/ui/app_colors.dart';
 import 'package:very_good_coffee/features/coffee/coffee.dart';
-import 'package:very_good_coffee/features/coffee/presentation/cubit/saved_images_cubit.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
 
 class App extends StatelessWidget {
