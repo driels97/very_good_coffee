@@ -5,7 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:very_good_coffee/features/coffee/coffee.dart';
 import 'package:very_good_coffee/features/coffee/presentation/cubit/saved_images_cubit.dart';
 import 'package:very_good_coffee/features/coffee/presentation/screens/saved_images_screen.dart';
-import 'package:very_good_coffee/features/coffee/presentation/widgets/save_image_widget.dart';
+import 'package:very_good_coffee/features/coffee/presentation/widgets/coffee_image_icon_widget.dart';
+import 'package:very_good_coffee/features/coffee/presentation/widgets/error_refresh_widget.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -28,59 +29,29 @@ class HomeScreen extends StatelessWidget {
                 BlocBuilder<CoffeeCubit, CoffeeState>(
                   builder: (context, coffeeState) {
                     if (coffeeState is CoffeeLoaded) {
-                      return Stack(
-                        alignment: Alignment.topRight,
-                        children: [
-                          Image(
-                            image: Image.memory(
-                              coffeeState.fetchedCoffeeImage.bytes,
-                            ).image,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child:
-                                BlocBuilder<SavedImagesCubit, SavedImagesState>(
-                                  builder: (context, savedImagesState) {
-                                    final isMarkedAsSaved =
-                                        savedImagesState is SavedImagesLoaded &&
-                                        savedImagesState.savedImages.contains(
-                                          coffeeState.fetchedCoffeeImage,
-                                        );
+                      return BlocBuilder<SavedImagesCubit, SavedImagesState>(
+                        builder: (context, savedImagesState) {
+                          final isMarkedAsSaved =
+                              savedImagesState is SavedImagesLoaded &&
+                              savedImagesState.savedImages.contains(
+                                coffeeState.fetchedCoffeeImage,
+                              );
 
-                                    final isWidgetDisabled =
-                                        savedImagesState is SavedImagesError;
+                          final isWidgetDisabled =
+                              savedImagesState is SavedImagesError;
 
-                                    return SaveImageWidget(
-                                      coffeeImage:
-                                          coffeeState.fetchedCoffeeImage,
-                                      isMarkedAsSaved: isMarkedAsSaved,
-                                      isWidgetDisabled: isWidgetDisabled,
-                                    );
-                                  },
-                                ),
-                          ),
-                        ],
+                          return CoffeeImageIconWidget(
+                            coffeeImage: coffeeState.fetchedCoffeeImage,
+                            isMarkedAsSaved: isMarkedAsSaved,
+                            isWidgetDisabled: isWidgetDisabled,
+                          );
+                        },
                       );
                     } else if (coffeeState is CoffeeError) {
-                      return InkWell(
-                        onTap: () async {
-                          await context.read<CoffeeCubit>().getNewCoffeeImage();
-                        },
-                        child: const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.refresh,
-                              size: 48,
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'Try again',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
+                      return ErrorRefreshWidget(
+                        onRefresh: context
+                            .read<CoffeeCubit>()
+                            .getNewCoffeeImage,
                       );
                     } else {
                       return const CircularProgressIndicator();
@@ -94,11 +65,9 @@ class HomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
-                          onPressed: () {
-                            unawaited(
-                              context.read<CoffeeCubit>().getNewCoffeeImage(),
-                            );
-                          },
+                          onPressed: context
+                              .read<CoffeeCubit>()
+                              .getNewCoffeeImage,
                           child: Text(l10n.newCoffeeButton),
                         ),
                         const SizedBox(height: 16),
@@ -123,18 +92,16 @@ class HomeScreen extends StatelessWidget {
   Future<void> _goToSavedImagesScreen(
     BuildContext context,
   ) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute<void>(
-        builder: (_) => BlocProvider.value(
-          value: context.read<SavedImagesCubit>(),
-          child: const SavedImagesScreen(),
+    unawaited(
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => BlocProvider.value(
+            value: context.read<SavedImagesCubit>(),
+            child: const SavedImagesScreen(),
+          ),
         ),
       ),
     );
-
-    if (context.mounted) {
-      await context.read<SavedImagesCubit>().getSavedCoffeeImages();
-    }
   }
 }
