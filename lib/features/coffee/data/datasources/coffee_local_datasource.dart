@@ -26,7 +26,7 @@ class CoffeeLocalDatasource {
     final file = File('$path/images/$fileName');
 
     if (file.existsSync()) {
-      file.deleteSync();
+      await file.delete();
     }
   }
 
@@ -34,15 +34,16 @@ class CoffeeLocalDatasource {
     final directory = Directory(
       (await getApplicationDocumentsDirectory()).path,
     );
-    final files = directory.listSync(recursive: true);
+    final files = directory.list(recursive: true);
 
     return files
-        .whereType<File>()
-        .where(
-          (file) =>
-              file.path.contains('/images/') && file.path.contains('_coffee'),
-        )
-        .map((file) => (file.path.split('/').last, file.readAsBytesSync()))
+        .where((file) => file is File && file.path.contains('/images/'))
+        .asyncMap((file) async {
+          final fileAsFile = file as File;
+          final fileName = fileAsFile.path.split('/').last;
+          final bytes = await fileAsFile.readAsBytes();
+          return (fileName, bytes);
+        })
         .toList();
   }
 }
