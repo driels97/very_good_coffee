@@ -26,7 +26,7 @@ class CoffeeRepository implements ICoffeeRepository {
         final jsonData = jsonDecode(jsonResponse.body) as Map<String, dynamic>;
         fileUrl = jsonData['file'] as String;
       } else {
-        return Left(Exception('Failed to request coffee json'));
+        return Left(Exception());
       }
 
       final response = await _coffeeRemoteDatasource.fetchCoffeeImage(
@@ -41,11 +41,11 @@ class CoffeeRepository implements ICoffeeRepository {
           ),
         );
       } else {
-        return Left(Exception('Failed to request coffee image'));
+        return Left(Exception());
       }
     } on Exception catch (_) {
       return Left(
-        Exception('Unknown error occurred while requesting new coffee image'),
+        Exception(),
       );
     }
   }
@@ -67,7 +67,7 @@ class CoffeeRepository implements ICoffeeRepository {
       return Right(imagesList);
     } on Exception catch (_) {
       return Left(
-        Exception('Unknown error occurred while getting saved coffee images'),
+        Exception(),
       );
     }
   }
@@ -85,7 +85,7 @@ class CoffeeRepository implements ICoffeeRepository {
       return const Right(unit);
     } on Exception catch (_) {
       return Left(
-        Exception('Unknown error occurred while saving the coffee image'),
+        Exception(),
       );
     }
   }
@@ -99,7 +99,7 @@ class CoffeeRepository implements ICoffeeRepository {
       return const Right(unit);
     } on Exception catch (_) {
       return Left(
-        Exception('Unknown error occurred while deleting the coffee image'),
+        Exception(),
       );
     }
   }

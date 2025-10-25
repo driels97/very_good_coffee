@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:very_good_coffee/features/coffee/domain/entities/coffee_image_entity.dart';
 import 'package:very_good_coffee/features/coffee/presentation/coffee_presentation.dart';
 import 'package:very_good_coffee/features/coffee/presentation/widgets/coffee_image_icon_widget.dart';
+import 'package:very_good_coffee/features/coffee/presentation/widgets/error_refresh_widget.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
 
 part '../widgets/saved_images_list_widget.dart';
@@ -29,7 +30,12 @@ class SavedImagesScreen extends StatelessWidget {
                 return SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(
-                    child: Text('Error: ${state.errorDescription}'),
+                    child: ErrorRefreshWidget(
+                      errorMessage: l10n.getSavedCoffeeImagesError,
+                      onRefresh: context
+                          .read<SavedImagesCubit>()
+                          .getSavedCoffeeImages,
+                    ),
                   ),
                 );
               }

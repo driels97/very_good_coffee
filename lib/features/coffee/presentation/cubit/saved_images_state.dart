@@ -23,32 +23,13 @@ class SavedImagesLoaded extends SavedImagesState {
 class SavedImagesLoadedSaveError extends SavedImagesLoaded {
   SavedImagesLoadedSaveError({
     required super.savedImages,
-    required this.errorDescription,
   });
-
-  final String errorDescription;
-
-  @override
-  List<Object?> get props => [savedImages, errorDescription];
 }
 
 class SavedImagesLoadedDeleteError extends SavedImagesLoaded {
   SavedImagesLoadedDeleteError({
     required super.savedImages,
-    required this.errorDescription,
   });
-
-  final String errorDescription;
-
-  @override
-  List<Object?> get props => [savedImages, errorDescription];
 }
 
-class SavedImagesError extends SavedImagesState {
-  SavedImagesError({required this.errorDescription});
-
-  final String errorDescription;
-
-  @override
-  List<Object?> get props => [errorDescription];
-}
+class SavedImagesError extends SavedImagesState {}

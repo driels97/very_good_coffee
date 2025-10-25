@@ -57,6 +57,7 @@ class HomeScreen extends StatelessWidget {
                   );
                 } else if (coffeeState is CoffeeError) {
                   return ErrorRefreshWidget(
+                    errorMessage: l10n.newCoffeeImageError,
                     onRefresh: context.read<CoffeeCubit>().getNewCoffeeImage,
                   );
                 } else {

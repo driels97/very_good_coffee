@@ -21,8 +21,10 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
     final result = await _coffeeRepository.getSavedCoffeeImages();
 
     await result.fold(
-      (exception) {
-        emit(SavedImagesError(errorDescription: exception.toString()));
+      (_) {
+        emit(
+          SavedImagesError(),
+        );
       },
       (savedImages) {
         emit(SavedImagesLoaded(savedImages: savedImages));
@@ -39,11 +41,10 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
         imageBytes: coffeeImage.bytes,
       );
       await result.fold(
-        (error) {
+        (_) {
           emit(
             SavedImagesLoadedSaveError(
               savedImages: currentState.savedImages,
-              errorDescription: error.toString(),
             ),
           );
         },
@@ -67,11 +68,10 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
       );
 
       await result.fold(
-        (error) {
+        (_) {
           emit(
             SavedImagesLoadedDeleteError(
               savedImages: currentState.savedImages,
-              errorDescription: error.toString(),
             ),
           );
         },

@@ -21,8 +21,10 @@ class CoffeeCubit extends Cubit<CoffeeState> {
     final result = await _coffeeRepository.getNewCoffeeImage();
 
     await result.fold(
-      (exception) {
-        emit(CoffeeError(description: exception.toString()));
+      (_) {
+        emit(
+          CoffeeError(),
+        );
       },
       (coffeeImage) async {
         emit(CoffeeLoaded(fetchedCoffeeImage: coffeeImage));

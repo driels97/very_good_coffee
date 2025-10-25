@@ -11,5 +11,21 @@
     "savedImagesAppBarTitle": "Saved Coffee Images",
     "@savedImagesBarTitle": {
         "description": "Text shown in the AppBar of the app when the saved images screen is displayed"
+    },
+    "newCoffeeImageError": "An error ocurred while trying to fetch a new coffee image",
+    "@newCoffeeImageError": {
+        "description": "An error description that appears when the app fails to fetch a new coffee image"
+    },
+    "getSavedCoffeeImagesError": "An error occurred while getting saved coffee images",
+    "@getSavedCoffeeImagesError": {
+        "description": "An error description that appears when the app fails to get the saved coffee images locally"
+    },
+    "saveCoffeeImageError": "An error occurred while saving the coffee image",
+    "@saveCoffeeImageError": {
+        "description": "An error description that appears when the app fails to save a coffee image locally"
+    },
+    "deleteCoffeeImageError": "An error occurred while deleting the coffee image",
+    "@deleteCoffeeImageError": {
+        "description": "An error description that appears when the app fails to delete a coffee image locally"
     }
 }

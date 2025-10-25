@@ -22,11 +22,4 @@ class CoffeeLoaded extends CoffeeState {
   ];
 }
 
-class CoffeeError extends CoffeeState {
-  CoffeeError({required this.description});
-
-  final String description;
-
-  @override
-  List<Object?> get props => [description];
-}
+class CoffeeError extends CoffeeState {}
