@@ -32,29 +32,17 @@ class SaveImageWidget extends StatelessWidget {
       child: AnimatedOpacity(
         opacity: isWidgetDisabled ? 0.5 : 1.0,
         duration: Durations.medium1,
-        child: isMarkedAsSaved
-            ? Icon(
-                Icons.favorite,
-                color: Colors.red,
-                size: 32,
-                shadows: List.generate(
-                  50,
-                  (index) => const Shadow(
-                    blurRadius: 2,
-                  ),
-                ),
-              )
-            : Icon(
-                Icons.favorite_border,
-                color: Colors.white,
-                size: 32,
-                shadows: List.generate(
-                  50,
-                  (index) => const Shadow(
-                    blurRadius: 2,
-                  ),
-                ),
-              ),
+        child: Icon(
+          isMarkedAsSaved ? Icons.favorite : Icons.favorite_border,
+          color: isMarkedAsSaved ? Colors.red : Colors.white,
+          size: 32,
+          shadows: List.generate(
+            50,
+            (index) => const Shadow(
+              blurRadius: 2,
+            ),
+          ),
+        ),
       ),
     );
   }
