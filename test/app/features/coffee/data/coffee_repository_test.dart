@@ -12,29 +12,29 @@ class _MockCoffeeLocalDataSource extends Mock
     implements CoffeeLocalDatasource {}
 
 void main() {
-  late CoffeeRemoteDatasource coffeeRemoteDatasource;
-  late CoffeeLocalDatasource coffeeLocalDatasource;
+  late CoffeeRemoteDatasource mockCoffeeRemoteDatasource;
+  late CoffeeLocalDatasource mockCoffeeLocalDatasource;
   late CoffeeRepository tRepository;
   late Uint8List tBytes;
   late String tFileName;
   late CoffeeImageEntity tCoffeeImage;
 
   setUp(() {
-    coffeeLocalDatasource = _MockCoffeeLocalDataSource();
-    coffeeRemoteDatasource = _MockCoffeeRemoteDataSource();
+    mockCoffeeLocalDatasource = _MockCoffeeLocalDataSource();
+    mockCoffeeRemoteDatasource = _MockCoffeeRemoteDataSource();
     tBytes = Uint8List.fromList([5, 6, 8, 2, 1, 2]);
     tFileName = 'test.png';
     tCoffeeImage = CoffeeImageModel(fileName: tFileName, bytes: tBytes);
     tRepository = CoffeeRepository(
-      coffeeRemoteDatasource: coffeeRemoteDatasource,
-      coffeeLocalDatasource: coffeeLocalDatasource,
+      coffeeRemoteDatasource: mockCoffeeRemoteDatasource,
+      coffeeLocalDatasource: mockCoffeeLocalDatasource,
     );
   });
 
   group('Coffee Respository tests', () {
     test('getNewCoffeeImage must return a CoffeeImageEntity', () async {
       when(
-        () => coffeeRemoteDatasource.fetchCoffeeImage(
+        () => mockCoffeeRemoteDatasource.fetchCoffeeImage(
           fileUrl: any(named: 'fileUrl'),
         ),
       ).thenAnswer(
@@ -42,7 +42,7 @@ void main() {
       );
 
       when(
-        () => coffeeRemoteDatasource.fetchCoffeeJson(),
+        () => mockCoffeeRemoteDatasource.fetchCoffeeJson(),
       ).thenAnswer(
         (_) async => Response('{"file":"$tFileName"}', 200),
       );
@@ -55,9 +55,9 @@ void main() {
         coffeeImageResult = coffeeImage;
       });
 
-      verify(() => coffeeRemoteDatasource.fetchCoffeeJson()).called(1);
+      verify(() => mockCoffeeRemoteDatasource.fetchCoffeeJson()).called(1);
       verify(
-        () => coffeeRemoteDatasource.fetchCoffeeImage(fileUrl: tFileName),
+        () => mockCoffeeRemoteDatasource.fetchCoffeeImage(fileUrl: tFileName),
       ).called(1);
       expect(coffeeImageResult?.fileName, tFileName);
       expect(coffeeImageResult?.bytes, tBytes);
@@ -67,13 +67,13 @@ void main() {
       'getSavedCoffeeImages must return a list of CoffeeImageEntities',
       () async {
         when(
-          () => coffeeLocalDatasource.getSavedCoffeeImages(),
+          () => mockCoffeeLocalDatasource.getSavedCoffeeImages(),
         ).thenAnswer(
           (_) async => [(tFileName, tBytes)],
         );
 
         when(
-          () => coffeeRemoteDatasource.fetchCoffeeJson(),
+          () => mockCoffeeRemoteDatasource.fetchCoffeeJson(),
         ).thenAnswer(
           (_) async => Response('{"file":"$tFileName"}', 200),
         );
@@ -86,14 +86,16 @@ void main() {
           coffeeImagesResult = coffeeImages;
         });
 
-        verify(() => coffeeLocalDatasource.getSavedCoffeeImages()).called(1);
+        verify(
+          () => mockCoffeeLocalDatasource.getSavedCoffeeImages(),
+        ).called(1);
         expect(coffeeImagesResult, [tCoffeeImage]);
       },
     );
 
     test('saveCoffeeImage must return unit', () async {
       when(
-        () => coffeeLocalDatasource.saveCoffeeImage(
+        () => mockCoffeeLocalDatasource.saveCoffeeImage(
           fileName: tFileName,
           imageBytes: tBytes,
         ),
@@ -107,7 +109,7 @@ void main() {
       );
 
       verify(
-        () => coffeeLocalDatasource.saveCoffeeImage(
+        () => mockCoffeeLocalDatasource.saveCoffeeImage(
           fileName: tFileName,
           imageBytes: tBytes,
         ),
@@ -117,7 +119,7 @@ void main() {
 
     test('deleteCoffeeImage must return unit', () async {
       when(
-        () => coffeeLocalDatasource.deleteCoffeeImage(
+        () => mockCoffeeLocalDatasource.deleteCoffeeImage(
           fileName: tFileName,
         ),
       ).thenAnswer(
@@ -129,7 +131,7 @@ void main() {
       );
 
       verify(
-        () => coffeeLocalDatasource.deleteCoffeeImage(
+        () => mockCoffeeLocalDatasource.deleteCoffeeImage(
           fileName: tFileName,
         ),
       ).called(1);

@@ -9,9 +9,7 @@ part 'saved_images_state.dart';
 class SavedImagesCubit extends Cubit<SavedImagesState> {
   SavedImagesCubit({required ICoffeeRepository coffeeRepository})
     : _coffeeRepository = coffeeRepository,
-      super(SavedImagesInitial()) {
-    unawaited(getSavedCoffeeImages());
-  }
+      super(SavedImagesInitial());
 
   final ICoffeeRepository _coffeeRepository;
 

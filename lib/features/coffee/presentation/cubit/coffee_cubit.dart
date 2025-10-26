@@ -9,9 +9,7 @@ part 'coffee_state.dart';
 class CoffeeCubit extends Cubit<CoffeeState> {
   CoffeeCubit({required ICoffeeRepository coffeeRepository})
     : _coffeeRepository = coffeeRepository,
-      super(CoffeeInitial()) {
-    unawaited(getNewCoffeeImage());
-  }
+      super(CoffeeInitial());
 
   final ICoffeeRepository _coffeeRepository;
 

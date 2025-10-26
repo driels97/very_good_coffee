@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:very_good_coffee/app/injection_container.dart' as injection;
@@ -25,10 +27,20 @@ class App extends StatelessWidget {
       home: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => injection.dependency<CoffeeCubit>(),
+            create: (_) {
+              final cubit = injection.dependency<CoffeeCubit>();
+
+              unawaited(cubit.getNewCoffeeImage());
+              return cubit;
+            },
           ),
           BlocProvider(
-            create: (_) => injection.dependency<SavedImagesCubit>(),
+            create: (_) {
+              final cubit = injection.dependency<SavedImagesCubit>();
+
+              unawaited(cubit.getSavedCoffeeImages());
+              return cubit;
+            },
           ),
         ],
         child: const HomeScreen(),
