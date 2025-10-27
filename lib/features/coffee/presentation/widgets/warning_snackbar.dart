@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class WarningSnackbar {
+abstract class WarningSnackbar {
   static void show(BuildContext context, {required String text}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
