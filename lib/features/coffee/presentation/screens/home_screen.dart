@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:very_good_coffee/app/widgets/error_refresh_widget.dart';
 import 'package:very_good_coffee/features/coffee/presentation/coffee_presentation.dart';
 import 'package:very_good_coffee/features/coffee/presentation/widgets/coffee_image_icon_widget.dart';
+import 'package:very_good_coffee/features/coffee/presentation/widgets/warning_snackbar.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -28,7 +29,22 @@ class HomeScreen extends StatelessWidget {
                 if (coffeeState is CoffeeLoaded) {
                   return Column(
                     children: [
-                      BlocBuilder<SavedImagesCubit, SavedImagesState>(
+                      BlocConsumer<SavedImagesCubit, SavedImagesState>(
+                        listener: (context, state) {
+                          if (state is SavedImagesLoadedSaveError) {
+                            WarningSnackbar.show(
+                              context,
+                              text: l10n.saveCoffeeImageError,
+                            );
+                          }
+
+                          if (state is SavedImagesLoadedDeleteError) {
+                            WarningSnackbar.show(
+                              context,
+                              text: l10n.deleteCoffeeImageError,
+                            );
+                          }
+                        },
                         builder: (context, savedImagesState) {
                           final isMarkedAsSaved =
                               savedImagesState is SavedImagesLoaded &&
