@@ -1,9 +1,13 @@
 part of '../screens/saved_images_screen.dart';
 
 class _SavedImagesListWidget extends StatelessWidget {
-  const _SavedImagesListWidget({required this.savedImages});
+  const _SavedImagesListWidget({
+    required this.savedImages,
+    this.isIconDisabled = false,
+  });
 
   final List<CoffeeImageEntity> savedImages;
+  final bool isIconDisabled;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +30,7 @@ class _SavedImagesListWidget extends StatelessWidget {
           child: CoffeeImageIconWidget(
             coffeeImage: coffeeImage,
             isMarkedAsSaved: true,
+            isWidgetDisabled: isIconDisabled,
           ),
         );
       },

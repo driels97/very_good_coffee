@@ -34,6 +34,8 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
     final currentState = state;
 
     if (currentState is SavedImagesLoaded) {
+      emit(SavedImagesSavingOrDeleting(savedImages: currentState.savedImages));
+
       final result = await _coffeeRepository.saveCoffeeImage(
         fileName: coffeeImage.fileName,
         imageBytes: coffeeImage.bytes,
@@ -61,6 +63,8 @@ class SavedImagesCubit extends Cubit<SavedImagesState> {
     final currentState = state;
 
     if (currentState is SavedImagesLoaded) {
+      emit(SavedImagesSavingOrDeleting(savedImages: currentState.savedImages));
+
       final result = await _coffeeRepository.deleteCoffeeImage(
         fileName: coffeeImage.fileName,
       );

@@ -20,6 +20,12 @@ class SavedImagesLoaded extends SavedImagesState {
   List<Object?> get props => [savedImages];
 }
 
+class SavedImagesSavingOrDeleting extends SavedImagesLoaded {
+  SavedImagesSavingOrDeleting({
+    required super.savedImages,
+  });
+}
+
 class SavedImagesLoadedSaveError extends SavedImagesLoaded {
   SavedImagesLoadedSaveError({
     required super.savedImages,

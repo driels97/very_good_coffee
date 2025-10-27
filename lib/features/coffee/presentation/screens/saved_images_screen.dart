@@ -25,7 +25,10 @@ class SavedImagesScreen extends StatelessWidget {
           BlocBuilder<SavedImagesCubit, SavedImagesState>(
             builder: (context, state) {
               if (state is SavedImagesLoaded) {
-                return _SavedImagesListWidget(savedImages: state.savedImages);
+                return _SavedImagesListWidget(
+                  savedImages: state.savedImages,
+                  isIconDisabled: state is SavedImagesSavingOrDeleting,
+                );
               } else if (state is SavedImagesError) {
                 return SliverFillRemaining(
                   hasScrollBody: false,

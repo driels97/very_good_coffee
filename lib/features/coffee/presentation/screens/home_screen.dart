@@ -53,7 +53,8 @@ class HomeScreen extends StatelessWidget {
                               );
 
                           final isWidgetDisabled =
-                              savedImagesState is SavedImagesError;
+                              savedImagesState is SavedImagesError ||
+                              savedImagesState is SavedImagesSavingOrDeleting;
 
                           return CoffeeImageIconWidget(
                             coffeeImage: coffeeState.fetchedCoffeeImage,

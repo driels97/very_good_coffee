@@ -110,6 +110,7 @@ void main() {
           SavedImagesLoaded(
             savedImages: [tCoffeeImage1],
           ),
+          SavedImagesSavingOrDeleting(savedImages: [tCoffeeImage1]),
           SavedImagesLoaded(
             savedImages: [tCoffeeImage1, tCoffeeImage2],
           ),
@@ -144,6 +145,7 @@ void main() {
           SavedImagesLoaded(
             savedImages: [tCoffeeImage1],
           ),
+          SavedImagesSavingOrDeleting(savedImages: [tCoffeeImage1]),
           SavedImagesLoadedSaveError(
             savedImages: [tCoffeeImage1],
           ),
@@ -177,6 +179,10 @@ void main() {
           SavedImagesLoaded(
             savedImages: [tCoffeeImage1, tCoffeeImage2],
           ),
+
+          SavedImagesSavingOrDeleting(
+            savedImages: [tCoffeeImage1, tCoffeeImage2],
+          ),
           SavedImagesLoaded(savedImages: [tCoffeeImage1]),
         ],
       );
@@ -206,6 +212,9 @@ void main() {
         expect: () => [
           SavedImagesLoading(),
           SavedImagesLoaded(
+            savedImages: [tCoffeeImage1, tCoffeeImage2],
+          ),
+          SavedImagesSavingOrDeleting(
             savedImages: [tCoffeeImage1, tCoffeeImage2],
           ),
           SavedImagesLoadedDeleteError(
