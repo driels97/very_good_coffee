@@ -5,11 +5,7 @@ import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:very_good_coffee/features/coffee/coffee.dart';
 
-class _MockCoffeeRemoteDataSource extends Mock
-    implements CoffeeRemoteDatasource {}
-
-class _MockCoffeeLocalDataSource extends Mock
-    implements CoffeeLocalDatasource {}
+import '../../../../helpers/helpers.dart';
 
 void main() {
   late CoffeeRemoteDatasource mockCoffeeRemoteDatasource;
@@ -20,8 +16,8 @@ void main() {
   late CoffeeImageEntity tCoffeeImage;
 
   setUp(() {
-    mockCoffeeLocalDatasource = _MockCoffeeLocalDataSource();
-    mockCoffeeRemoteDatasource = _MockCoffeeRemoteDataSource();
+    mockCoffeeLocalDatasource = MockCoffeeLocalDataSource();
+    mockCoffeeRemoteDatasource = MockCoffeeRemoteDataSource();
     tBytes = Uint8List.fromList([5, 6, 8, 2, 1, 2]);
     tFileName = 'test.png';
     tCoffeeImage = CoffeeImageModel(fileName: tFileName, bytes: tBytes);

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:very_good_coffee/features/coffee/coffee.dart';
 
-class _MockCoffeeRepository extends Mock implements CoffeeRepository {}
+import '../../../../helpers/helpers.dart';
 
 void main() {
   late CoffeeRepository mockCoffeeRepository;
@@ -16,7 +16,7 @@ void main() {
   late CoffeeCubit cubit;
 
   setUp(() {
-    mockCoffeeRepository = _MockCoffeeRepository();
+    mockCoffeeRepository = MockCoffeeRepository();
 
     tFileName = 'test.png';
     tBytes = Uint8List.fromList([5, 6, 8, 2, 1, 2]);
