@@ -3,7 +3,7 @@ import 'package:very_good_coffee/features/coffee/coffee.dart';
 
 final GetIt dependency = GetIt.instance;
 
-Future<void> init() async {
+Future<void> initGetItDependencies() async {
   dependency
     ..registerFactory(
       () => CoffeeCubit(

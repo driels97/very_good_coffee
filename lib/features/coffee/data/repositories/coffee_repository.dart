@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
-import 'package:very_good_coffee/features/coffee/data/coffee_data.dart';
-import 'package:very_good_coffee/features/coffee/domain/coffee_domain.dart';
+import 'package:very_good_coffee/features/coffee/data/data.dart';
+import 'package:very_good_coffee/features/coffee/domain/domain.dart';
 
 class CoffeeRepository implements ICoffeeRepository {
   CoffeeRepository({

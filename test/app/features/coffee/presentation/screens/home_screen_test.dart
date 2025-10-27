@@ -4,12 +4,11 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:very_good_coffee/app/widgets/error_refresh_widget.dart';
+import 'package:very_good_coffee/app/app.dart';
 import 'package:very_good_coffee/features/coffee/coffee.dart';
-import 'package:very_good_coffee/features/coffee/presentation/widgets/coffee_image_icon_widget.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
 
-import '../../../../helpers/helpers.dart';
+import '../../../../../helpers/helpers.dart';
 
 void main() {
   late CoffeeCubit mockCoffeeCubit;

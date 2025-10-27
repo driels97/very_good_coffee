@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:very_good_coffee/features/coffee/presentation/coffee_presentation.dart';
+import 'package:very_good_coffee/features/coffee/presentation/presentation.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
 
 import 'helpers.dart';

@@ -1,3 +1,3 @@
-export 'data/coffee_data.dart';
-export 'domain/coffee_domain.dart';
-export 'presentation/coffee_presentation.dart';
+export 'data/data.dart';
+export 'domain/domain.dart';
+export 'presentation/presentation.dart';

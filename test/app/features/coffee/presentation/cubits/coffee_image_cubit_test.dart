@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:very_good_coffee/features/coffee/coffee.dart';
 
-import '../../../../helpers/helpers.dart';
+import '../../../../../helpers/helpers.dart';
 
 void main() {
   late CoffeeRepository mockCoffeeRepository;
