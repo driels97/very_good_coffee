@@ -60,18 +60,76 @@ void main() {
     });
 
     test(
-      'getSavedCoffeeImages must return a list of CoffeeImageEntities',
+      '''
+        getNewCoffeeImage must return an Exception
+        when fetchCoffeeImage throws it
+        ''',
       () async {
         when(
-          () => mockCoffeeLocalDatasource.getSavedCoffeeImages(),
-        ).thenAnswer(
-          (_) async => [(tFileName, tBytes)],
+          () => mockCoffeeRemoteDatasource.fetchCoffeeImage(
+            fileUrl: any(named: 'fileUrl'),
+          ),
+        ).thenThrow(
+          Exception(),
         );
 
         when(
           () => mockCoffeeRemoteDatasource.fetchCoffeeJson(),
         ).thenAnswer(
           (_) async => Response('{"file":"$tFileName"}', 200),
+        );
+
+        final result = await tRepository.getNewCoffeeImage();
+
+        verify(
+          () => mockCoffeeRemoteDatasource.fetchCoffeeJson(),
+        ).called(1);
+        verify(
+          () => mockCoffeeRemoteDatasource.fetchCoffeeImage(fileUrl: tFileName),
+        ).called(1);
+        expect(result.isLeft(), true);
+      },
+    );
+
+    test(
+      '''
+        getNewCoffeeImage must return an Exception
+        when fetchCoffeeJson throws it
+        ''',
+      () async {
+        when(
+          () => mockCoffeeRemoteDatasource.fetchCoffeeImage(
+            fileUrl: any(named: 'fileUrl'),
+          ),
+        ).thenAnswer(
+          (_) async => Response.bytes(tBytes, 200),
+        );
+
+        when(
+          () => mockCoffeeRemoteDatasource.fetchCoffeeJson(),
+        ).thenThrow(
+          Exception(),
+        );
+
+        final result = await tRepository.getNewCoffeeImage();
+
+        verify(
+          () => mockCoffeeRemoteDatasource.fetchCoffeeJson(),
+        ).called(1);
+        verifyNever(
+          () => mockCoffeeRemoteDatasource.fetchCoffeeImage(fileUrl: tFileName),
+        );
+        expect(result.isLeft(), true);
+      },
+    );
+
+    test(
+      'getSavedCoffeeImages must return a list of CoffeeImageEntities',
+      () async {
+        when(
+          () => mockCoffeeLocalDatasource.getSavedCoffeeImages(),
+        ).thenAnswer(
+          (_) async => [(tFileName, tBytes)],
         );
 
         List<CoffeeImageEntity>? coffeeImagesResult;
@@ -86,6 +144,26 @@ void main() {
           () => mockCoffeeLocalDatasource.getSavedCoffeeImages(),
         ).called(1);
         expect(coffeeImagesResult, [tCoffeeImage]);
+      },
+    );
+
+    test(
+      '''
+        getSavedCoffeeImages must return an Exception
+        when it is thrown
+        ''',
+      () async {
+        when(
+          () => mockCoffeeLocalDatasource.getSavedCoffeeImages(),
+        ).thenThrow(
+          Exception(),
+        );
+
+        final result = await tRepository.getSavedCoffeeImages();
+        verify(
+          () => mockCoffeeLocalDatasource.getSavedCoffeeImages(),
+        ).called(1);
+        expect(result.isLeft(), true);
       },
     );
 
@@ -113,6 +191,31 @@ void main() {
       expect(result.isRight(), true);
     });
 
+    test(
+      'saveCoffeeImage must return an Exception when it is thrown',
+      () async {
+        when(
+          () => mockCoffeeLocalDatasource.saveCoffeeImage(
+            fileName: tFileName,
+            imageBytes: tBytes,
+          ),
+        ).thenThrow(Exception());
+
+        final result = await tRepository.saveCoffeeImage(
+          fileName: tFileName,
+          imageBytes: tBytes,
+        );
+
+        verify(
+          () => mockCoffeeLocalDatasource.saveCoffeeImage(
+            fileName: tFileName,
+            imageBytes: tBytes,
+          ),
+        ).called(1);
+        expect(result.isLeft(), true);
+      },
+    );
+
     test('deleteCoffeeImage must return unit', () async {
       when(
         () => mockCoffeeLocalDatasource.deleteCoffeeImage(
@@ -133,5 +236,27 @@ void main() {
       ).called(1);
       expect(result.isRight(), true);
     });
+
+    test(
+      'deleteCoffeeImage must return an Exception when it is thrown',
+      () async {
+        when(
+          () => mockCoffeeLocalDatasource.deleteCoffeeImage(
+            fileName: tFileName,
+          ),
+        ).thenThrow(Exception());
+
+        final result = await tRepository.deleteCoffeeImage(
+          fileName: tFileName,
+        );
+
+        verify(
+          () => mockCoffeeLocalDatasource.deleteCoffeeImage(
+            fileName: tFileName,
+          ),
+        ).called(1);
+        expect(result.isLeft(), true);
+      },
+    );
   });
 }
