@@ -30,7 +30,8 @@ class CoffeeLocalDatasource {
     }
   }
 
-  Future<List<(String, Uint8List)>> getSavedCoffeeImages() async {
+  Future<List<({String fileName, Uint8List bytes})>>
+  getSavedCoffeeImages() async {
     final directory = Directory(
       (await getApplicationDocumentsDirectory()).path,
     );
@@ -42,7 +43,7 @@ class CoffeeLocalDatasource {
           final fileAsFile = file as File;
           final fileName = fileAsFile.path.split('/').last;
           final bytes = await fileAsFile.readAsBytes();
-          return (fileName, bytes);
+          return (fileName: fileName, bytes: bytes);
         })
         .toList();
   }

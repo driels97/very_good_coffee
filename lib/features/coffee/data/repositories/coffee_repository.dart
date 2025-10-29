@@ -58,8 +58,8 @@ class CoffeeRepository implements ICoffeeRepository {
       final imagesList = savedImages
           .map(
             (image) => CoffeeImageModel(
-              fileName: image.$1,
-              bytes: image.$2,
+              fileName: image.fileName,
+              bytes: image.bytes,
             ),
           )
           .toList();

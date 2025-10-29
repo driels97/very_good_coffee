@@ -129,7 +129,7 @@ void main() {
         when(
           () => mockCoffeeLocalDatasource.getSavedCoffeeImages(),
         ).thenAnswer(
-          (_) async => [(tFileName, tBytes)],
+          (_) async => [(fileName: tFileName, bytes: tBytes)],
         );
 
         List<CoffeeImageEntity>? coffeeImagesResult;
